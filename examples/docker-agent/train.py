@@ -8,7 +8,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch import nn, optim
-from torch.utils.tensorboard import SummaryWriter
 
 import pommerman
 from pommerman import agents
@@ -231,33 +230,18 @@ class DQNAgent(DockerAgentRunner):
         return np.concatenate((
             board_cent, bbs_cent, bl_cent,
             o['blast_strength'], o['can_kick'], o['ammo']), axis=None)
-    '''
+
     def act(self, observation, action_space):
         obs = self.translate_obs(observation)
         obs = torch.from_numpy(obs).float().to(self.model.device)
         self.obs_fps.append(obs)
         obs = torch.cat(self.obs_fps[-4:])
         sample = random.random()
-        if sample > 1000.0 / (global_step + 0.1):
+        if sample > 0.1:
             re_action = self.model.policy_net(obs).argmax().item()
             return re_action
         else:
             return self.random.act(observation, action_space)
-    '''
-    def act(self, observation, action_space):
-        obs = self.translate_obs(observation)
-        obs = torch.from_numpy(obs).float().to(self.device)
-        self.obs_fps.append(obs)
-        obs = torch.cat(self.obs_fps[-4:])
-        sample = random.random()
-        if sample > 0.9:
-            re_action = self.model(obs).argmax().item()
-            return re_action
-        else:
-            return self._agent.act(observation, action_space)
-    def episode_end(self, reward):
-        global reward_list
-        reward_list.append(reward)
 
 
 if __name__ == "__main__":
