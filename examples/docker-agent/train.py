@@ -137,7 +137,7 @@ class DQN(nn.Module):
 
     def __init__(self):
         super(DQN, self).__init__()
-        self.device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.gamma = 0.999
         self.obs_width = 11
         self.lr = 0.001
